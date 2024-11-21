@@ -1,14 +1,16 @@
-package repository;
+package service.book;
 
 import model.Book;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface BookRepository {
+public interface BookService {
     List<Book> findAll();
-    Optional<Book> findById(Long id);
+    Book findById(Long id);
     boolean save(Book book);
     boolean delete(Book book);
+    int getAgeOfBook(Book book);
+    int getAgeOfBook(Long id);
     void removeAll();
+
 }
