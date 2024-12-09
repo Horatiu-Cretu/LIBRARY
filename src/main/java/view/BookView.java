@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
@@ -21,10 +22,13 @@ public class BookView {
     private final ObservableList<BookDTO> booksObservableList;
     private TextField authorTextField;
     private TextField titleTextField;
+    private TextField quantityTextField;
     private Label authorLabel;
     private Label titleLabel;
+    private Label stockLabel;
     private Button saveButton;
     private Button deleteButton;
+    private Button sellButton;
 
     public BookView(Stage primaryStage, List<BookDTO> books) {
         primaryStage.setTitle("Library");
@@ -32,7 +36,7 @@ public class BookView {
         GridPane gridPane = new GridPane();
         initializeGridPage(gridPane);
 
-        Scene scene = new Scene(gridPane, 720, 480);
+        Scene scene = new Scene(gridPane, 720, 500);
         primaryStage.setScene(scene);
 
         booksObservableList = FXCollections.observableArrayList(books);
@@ -59,8 +63,10 @@ public class BookView {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         TableColumn<BookDTO, String> authorColumn = new TableColumn<>("Author");
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
+        TableColumn<BookDTO, String> stockColumn = new TableColumn<>("Stock");
+        stockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
 
-        bookTableView.getColumns().addAll(titleColumn, authorColumn);
+        bookTableView.getColumns().addAll(titleColumn, authorColumn, stockColumn);
 
         bookTableView.setItems(booksObservableList);
 
@@ -69,23 +75,35 @@ public class BookView {
 
     private void initSaveOptions(GridPane gridPane) {
         titleLabel = new Label("Title");
-        gridPane.add(titleLabel, 1, 1);
+        gridPane.add(titleLabel, 0, 1);
 
         titleTextField = new TextField();
-        gridPane.add(titleTextField, 2, 1);
+        gridPane.add(titleTextField, 1, 1);
 
         authorLabel = new Label("Author");
-        gridPane.add(authorLabel, 3, 1);
+        gridPane.add(authorLabel, 0, 2);
 
         authorTextField = new TextField();
-        gridPane.add(authorTextField, 4, 1);
+        gridPane.add(authorTextField, 1, 2);
+
+        stockLabel = new Label("Stock");
+        gridPane.add(stockLabel, 0, 3);
+
+        quantityTextField = new TextField();
+        gridPane.add(quantityTextField, 1, 3);
+
+        VBox buttonBox = new VBox(10);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
         saveButton = new Button("Save");
-        gridPane.add(saveButton, 5, 1);
-
         deleteButton = new Button("Delete");
-        gridPane.add(deleteButton, 6, 1);
+        sellButton = new Button("Sell");
+
+        buttonBox.getChildren().addAll(saveButton, deleteButton, sellButton);
+
+        gridPane.add(buttonBox, 5, 0, 1, 3);
     }
+
 
     public void addSaveButtonListener(EventHandler<ActionEvent> saveButtonListener) {
         saveButton.setOnAction(saveButtonListener);
@@ -93,6 +111,10 @@ public class BookView {
 
     public void addDeleteButtonListener(EventHandler<ActionEvent> deleteButtonListener) {
         deleteButton.setOnAction(deleteButtonListener);
+    }
+
+    public void addSellButtonListener(EventHandler<ActionEvent> sellButtonListener) {
+        sellButton.setOnAction(sellButtonListener);
     }
 
     public void addDisplayAlertMessage(String title, String header, String content) {
@@ -111,6 +133,8 @@ public class BookView {
     public String getAuthor() {
         return authorTextField.getText();
     }
+
+    public String getStock() {return quantityTextField.getText();}
 
     public void addBookToObservableList(BookDTO bookDTO) {
         this.booksObservableList.add(bookDTO);

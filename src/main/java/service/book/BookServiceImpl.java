@@ -2,6 +2,7 @@ package service.book;
 
 import model.Book;
 import repository.book.BookRepository;
+import view.model.BookDTO;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -53,5 +54,14 @@ public class BookServiceImpl implements BookService{
 
     }
 
+    public boolean sellBook(Book book) {
+        try {
+            bookRepository.sellBook(book);
+            return true; // Assume success if no exceptions
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; // Indicate failure
+        }
+    }
 
 }

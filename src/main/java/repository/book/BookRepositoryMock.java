@@ -39,4 +39,9 @@ public class BookRepositoryMock implements BookRepository{
     public void removeAll() {
         books.clear();
     }
+
+    @Override
+    public void sellBook(Book book) {
+        books.set(books.size() - 1, book);
+    }
 }

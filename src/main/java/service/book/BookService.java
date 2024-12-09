@@ -1,6 +1,7 @@
 package service.book;
 
 import model.Book;
+import view.model.BookDTO;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ public interface BookService {
     int getAgeOfBook(Book book);
     int getAgeOfBook(Long id);
     void removeAll();
-
+    boolean sellBook(Book book);
 }

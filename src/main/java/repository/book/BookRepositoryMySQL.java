@@ -60,13 +60,15 @@ public class BookRepositoryMySQL implements BookRepository{
     public boolean save(Book book) {
 
 //        String newSql = "INSERT INTO book VALUES(null, \'" + book.getAuthor() +"\', \'" + book.getTitle()+"\', \'" + book.getPublishedDate() + "\' );";
-        String newSql = "INSERT INTO book VALUES(null, ?, ?, ?);";
+        String newSql = "INSERT INTO book VALUES(null, ?, ?, ?, ?);";
 
         try{
             PreparedStatement preparedStatement = connection.prepareStatement(newSql);
             preparedStatement.setString(1, book.getAuthor());
             preparedStatement.setString(2, book.getTitle());
-            preparedStatement.setDate(3, java.sql.Date.valueOf(book.getPublishDate()));
+            preparedStatement.setDate(3, java.sql.Date
+                                    .valueOf(book.getPublishDate()));
+            preparedStatement.setInt(4,book.getStock());
 
             int rowsInserted = preparedStatement.executeUpdate();
 
@@ -106,13 +108,28 @@ public class BookRepositoryMySQL implements BookRepository{
         }
     }
 
+    @Override
+    public void sellBook(Book book) {
+        String sql = "UPDATE book SET Stock = Stock - 1 WHERE id = " + book.getId();
+        try{
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(sql);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     private Book getBookFromResultSet(ResultSet resultSet) throws SQLException{
         return new BookBuilder()
                 .setId(resultSet.getLong("id"))
                 .setTitle(resultSet.getString("title"))
                 .setAuthor(resultSet.getString("author"))
-                .setPublishedDate(new java.sql.Date(resultSet.getDate("publishedDate").getTime()).toLocalDate())
+                .setPublishedDate(new java.sql.Date(resultSet
+                        .getDate("publishedDate").getTime()).toLocalDate())
+                .setStock(resultSet.getInt("stock"))
                 .build();
 
     }
+
+
 }

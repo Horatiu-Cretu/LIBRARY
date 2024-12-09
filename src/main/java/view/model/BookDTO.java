@@ -37,4 +37,20 @@ public class BookDTO {
         }
         return title;
     }
+
+    private StringProperty stock;
+
+    public void setStock(String stock){
+        stockProperty().set(stock);
+    }
+
+    public String getStock(){
+        return stockProperty().get();
+    }
+    public StringProperty stockProperty(){
+        if (stock == null){
+            stock = new SimpleStringProperty(this, "stock");
+        }
+        return stock;
+    }
 }
